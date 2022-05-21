@@ -1,0 +1,327 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "HostelWorldDemo API Documentation",
+        "description": "HostelWorldDemo API description",
+        "contact": {
+            "email": "admin@admin.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Demo API Server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "UnAuthorize"
+                ],
+                "summary": "User login",
+                "operationId": "985cd5203e2d0a820e113f2f4fdb2847",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "access_token": {
+                                            "description": "access_token",
+                                            "format": "string",
+                                            "default": "1|475IzWp7mWNfF2JR12owRsMP1Q0T6grGX3lgBdzr"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiRequestException"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiValidationException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiSystemException"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/events/search": {
+            "get": {
+                "tags": [
+                    "Authorize"
+                ],
+                "summary": "Search events by city/country and date",
+                "operationId": "76d7f84ff862400ca28cec717e4f75a8",
+                "parameters": [
+                    {
+                        "name": "term",
+                        "in": "path",
+                        "description": "Search term",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Lisbon"
+                    },
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "Date in the future",
+                        "required": true,
+                        "schema": {
+                            "type": "date"
+                        },
+                        "example": "2022-06-21"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EventResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiRequestException"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiValidationException"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiSystemException"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ApiNotFoundException": {
+                "properties": {
+                    "message": {
+                        "description": "The err message",
+                        "type": "string",
+                        "example": "Not Found"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiRequestException": {
+                "properties": {
+                    "message": {
+                        "description": "The err message",
+                        "type": "string",
+                        "example": "Unauthenticated"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiSystemException": {
+                "properties": {
+                    "message": {
+                        "description": "The err message",
+                        "type": "string",
+                        "example": "Internal Server Error"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiValidationException": {
+                "properties": {
+                    "message": {
+                        "properties": {
+                            "example": {
+                                "description": "The err message",
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "example": "The example field is required."
+                                }
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "fail"
+                    }
+                },
+                "type": "object"
+            },
+            "EventSearchRequest": {
+                "properties": {
+                    "term": {
+                        "description": "City/country",
+                        "format": "string",
+                        "default": "Lisbon"
+                    },
+                    "date": {
+                        "description": "Date",
+                        "format": "string",
+                        "default": "2022-06-21"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "properties": {
+                    "email": {
+                        "description": "email",
+                        "format": "string",
+                        "default": "example@app.com"
+                    },
+                    "password": {
+                        "description": "password",
+                        "format": "string",
+                        "default": "password"
+                    }
+                },
+                "type": "object"
+            },
+            "EventResource": {
+                "description": "Class EventResource",
+                "properties": {
+                    "events": {
+                        "properties": {
+                            "id": {
+                                "title": "ID",
+                                "description": "ID",
+                                "format": "int64",
+                                "example": 1
+                            },
+                            "name": {
+                                "title": "Name",
+                                "description": "Name of the new Event",
+                                "example": "Rock in Rio 2022"
+                            },
+                            "city": {
+                                "title": "City",
+                                "description": "City where the event is taking place",
+                                "example": "Lisbon"
+                            },
+                            "country": {
+                                "title": "Country",
+                                "description": "Country where the event is taking place",
+                                "example": "Portugal"
+                            },
+                            "startDate": {
+                                "title": "Start Date",
+                                "description": "Start Date",
+                                "type": "string",
+                                "format": "date",
+                                "example": "2020-01-27"
+                            },
+                            "endDate": {
+                                "title": "End Date",
+                                "description": "End Date",
+                                "type": "string",
+                                "format": "date",
+                                "example": "2020-01-27"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiError": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Not Found"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "error"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiSuccess": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {}
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "success"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}
