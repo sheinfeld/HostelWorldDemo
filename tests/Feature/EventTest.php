@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Tests\TestCase;
 
 class EventTest extends TestCase
@@ -14,9 +15,9 @@ class EventTest extends TestCase
      */
     public function test_the_application_returns_a_successful_response()
     {
-        $user = User::factory()->create();
+       $user = User::factory()->create();
 
-        $response = $this->get("/api/v1/events/search?term=Bison&date=2021-04-30", [
+        $response = $this->get(sprintf("/api/v1/events/search?term=%s&date=%s", "Bison", Carbon::today()->format('Y-m-d')), [
             'Authorization' => 'Bearer ' . $user->createToken('authToken')->plainTextToken,
         ]);
 

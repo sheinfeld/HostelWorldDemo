@@ -14,8 +14,8 @@ class EventSearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'term' => 'required|string|max:255',
-            'date' => 'required|date:Y-m-d'//|after:now',
+            'term' => 'nullable|string|max:255',
+            'date' => 'nullable|date:Y-m-d|after_or_equal:today',
         ];
     }
 
